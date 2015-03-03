@@ -1,3 +1,3 @@
 class StationSerializer < ActiveModel::Serializer
-  attributes :id, :name, :endStations
+  attributes :id, :name
 end
