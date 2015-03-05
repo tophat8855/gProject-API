@@ -1,3 +1,3 @@
 class LegSerializer < ActiveModel::Serializer
-  attributes :id, :type, :start_location, :end_location, :distance, :emissions, :description
+  attributes :id, :type, :start_location, :end_location, :distance, :emissions, :description, :trip_id
 end
