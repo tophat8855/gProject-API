@@ -45,3 +45,7 @@ end
 
 gem 'rest-client'
 gem 'bcrypt', '~> 3.1.7'
+
+group :development, :test do
+  gem 'rspec-rails'
+end
