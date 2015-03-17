@@ -25,6 +25,6 @@ class LegsController < ApplicationController
 
   private
   def leg_params
-    params.require(:leg).permit(:type, :start_location, :end_location, :distance, :emissions, :description)
+    params.require(:leg).permit(:mode, :start_location, :end_location, :distance, :emissions, :created_at, :updated_at, :trip_id)
   end
 end
