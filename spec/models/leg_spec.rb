@@ -75,5 +75,55 @@ describe Leg do
       leg = Leg.create
       expect(Leg.all.count).to eq(0)
     end
+
+    it 'validates mode' do
+      leg = Leg.create(
+      :start_location => '44 Tehama, San Francisco, CA',
+      :end_location => '543 Howard, San Francisco, CA',
+      :distance => 0.2,
+      :emissions => 0.6209,
+      )
+      expect(Leg.all.count).to eq(0)
+    end
+
+    it 'validates start location' do
+      leg = Leg.create(
+      :mode => 'walk',
+      :end_location => '543 Howard, San Francisco, CA',
+      :distance => 0.2,
+      :emissions => 0.6209,
+      )
+      expect(Leg.all.count).to eq(0)
+    end
+
+    it 'validates end location' do
+      leg = Leg.create(
+      :mode => 'walk',
+      :start_location => '44 Tehama, San Francisco, CA',
+      :distance => 0.2,
+      :emissions => 0.6209,
+      )
+      expect(Leg.all.count).to eq(0)
+    end
+
+    it 'validates distance' do
+      leg = Leg.create(
+      :mode => 'walk',
+      :start_location => '44 Tehama, San Francisco, CA',
+      :end_location => '543 Howard, San Francisco, CA',
+      :emissions => 0.6209,
+      )
+      expect(Leg.all.count).to eq(0)
+    end
+
+    it 'validates emissions' do
+      leg = Leg.create(
+      :mode => 'walk',
+      :start_location => '44 Tehama, San Francisco, CA',
+      :end_location => '543 Howard, San Francisco, CA',
+      :distance => 0.2,
+      )
+      expect(Leg.all.count).to eq(0)
+    end
   end
 end
