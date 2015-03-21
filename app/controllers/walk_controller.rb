@@ -1,6 +1,5 @@
 class WalkController < ApplicationController
   def index
-
     start = params["start"].gsub!(' ', "+")
     ending = params["end"].gsub!(' ', '+')
 

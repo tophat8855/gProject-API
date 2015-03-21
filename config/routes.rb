@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   resources :legs
 
   get '/bart' => 'stations#bart'
+  get '/bus' => 'bus#bus'
 end
