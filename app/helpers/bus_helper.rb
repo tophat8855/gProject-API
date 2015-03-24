@@ -86,4 +86,38 @@ module BusHelper
     end
     desired_cpt_stoppointid
   end
+
+  def my_trip_latlng(start_stopid, end_stopid, patternid)
+
+    trip_array = []
+
+    patternstop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERNSTOP.CSV')
+
+    start_sequence_no = get_sequence_no(start_stopid, patternid).to_i
+    end_sequence_no = get_sequence_no(end_stopid, patternid).to_i
+
+    patternstop_csv.each do |row|
+      if (row[5] == patternid) && (start_sequence_no..end_sequence_no).include?(row[1].to_i)
+        trip_array << [row[1].to_i, row[7]]
+      end
+    end
+
+    trip_array.sort!
+    cpt_list = trip_array.map { |array| array[1] }
+
+    get_latlng_array(cpt_list)
+  end
+
+  def get_sequence_no(stopid, patternid)
+    patternstop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERNSTOP.CSV')
+    sequence_no = 0
+
+    patternstop_csv.each do |row|
+      if row[5] == patternid && row[7] == stopid
+        sequence_no = row[1]
+      end
+    end
+
+    sequence_no
+  end
 end

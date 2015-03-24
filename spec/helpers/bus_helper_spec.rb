@@ -110,14 +110,25 @@ RSpec.describe BusHelper, :type => :helper do
       expect(cpt_stoppointid).to eq('12016978')
     end
 
+    it 'gives a sequence number' do
+      stopid = '12016978'
+      patternid = '158608'
+
+      sequence_no = get_sequence_no(stopid, patternid)
+
+      expect(sequence_no).to eq('9')
+    end
+
     it 'takes 2 stop point ids and returns an ordered array of latlngs of bus stops in between them, inclusive' do
-      starting_stoppiontid = '12016978'
+      starting_stoppointid = '12016978'
       ending_stoppointid = '12017087'
 
       patternid = '158608'
 
       array_of_latlng_of_trip = my_trip_latlng(starting_stoppointid, ending_stoppointid, patternid)
-      expect(array_of_latlng_of_trip).to eq(0)
+
+      expect(array_of_latlng_of_trip.length).to eq(6)
+      expect(array_of_latlng_of_trip).to eq([[37.8314868, -122.2798835], [37.8472126, -122.2849571], [37.8525141, -122.2866745], [37.8614662, -122.2895464], [37.8414257, -122.2830821], [37.869467, -122.2921181]])
     end
   end
 end
