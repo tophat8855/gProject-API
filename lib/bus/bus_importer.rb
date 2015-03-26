@@ -1,5 +1,19 @@
-module BusHelper
-  def get_sch_routeid(route)
+class BusImporter
+
+    def self.distances_to_db
+    end
+  # def initialize(csv_file)
+  #
+  # end
+  #
+  # def import
+  #   # read the csv file
+  #   # put all the stops in the DB
+  #   # hit google for each distance between stops
+  # end
+
+
+  def self.get_sch_routeid(route)
     sch_routeid = 0
     route_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/ROUTE.CSV')
     route_csv.each do |row|
@@ -10,7 +24,7 @@ module BusHelper
     sch_routeid
   end
 
-  def get_sch_patternid(sch_routeid, direction)
+  def self.get_sch_patternid(sch_routeid, direction)
     sch_patternid = 0
     pattern_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERN.CSV')
     pattern_csv.each do |row|
@@ -21,7 +35,7 @@ module BusHelper
     sch_patternid
   end
 
-  def get_cpt_stoppointid(sch_patternid)
+  def self.get_cpt_stoppointid(sch_patternid)
     cpt_stoppointid = []
     patternstop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERNSTOP.CSV')
     patternstop_csv.each do |row|
@@ -32,9 +46,9 @@ module BusHelper
     cpt_stoppointid
   end
 
-  def get_latlng(address)
+  def self.get_latlng(address)
     address = address.gsub!(' ', "+")
-    response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + ENV['API_KEY']
+    response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyA6LTKJE21pYmBhAU0PiVndEyb7YZ9Cepo"
     results = JSON.parse(response.body)
     latlng = results["results"][0]["geometry"]["location"]
     lat = latlng["lat"]
@@ -43,7 +57,7 @@ module BusHelper
     address_latlng = [lat, lng]
   end
 
-  def distance(point1, point2)
+  def self.distance(point1, point2)
     x2 = point2[0]
     x1 = point1[0]
     y2 = point2[1]
@@ -52,7 +66,7 @@ module BusHelper
     distance = Math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
   end
 
-  def get_latlng_array(cpt_stoppointid)
+  def self.get_latlng_array(cpt_stoppointid)
     latlng_array = []
     stop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/STOP.CSV')
 
@@ -64,7 +78,7 @@ module BusHelper
     latlng_array
   end
 
-  def desired_cpt_stoppointid(latlng_comp, latlng_array)
+  def self.desired_cpt_stoppointid(latlng_comp, latlng_array)
     desired_cpt_stoppointid = ''
 
     dist_array = latlng_array.map do |point|
@@ -87,7 +101,7 @@ module BusHelper
     desired_cpt_stoppointid
   end
 
-  def my_trip_latlng(start_stopid, end_stopid, patternid)
+  def self.my_trip_latlng(start_stopid, end_stopid, patternid)
 
     trip_array = []
 
@@ -108,7 +122,7 @@ module BusHelper
     get_latlng_array(cpt_list)
   end
 
-  def get_sequence_no(stopid, patternid)
+  def self.get_sequence_no(stopid, patternid)
     patternstop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERNSTOP.CSV')
     sequence_no = 0
 
@@ -121,7 +135,7 @@ module BusHelper
     sequence_no
   end
 
-  def get_sch_patternids_of_all
+  def self.get_sch_patternids_of_all
     all_routes = []
     patternstop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERNSTOP.CSV')
 

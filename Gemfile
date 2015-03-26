@@ -38,6 +38,8 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'rack-cors', '~> 0.3.1'
 gem 'active_model_serializers', '~> 0.9.3'
 
+gem 'dotenv-rails', :groups => [:development, :test]
+
 group :development do
   gem "better_errors"
   gem "binding_of_caller"
@@ -50,3 +52,5 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
 end
+
+gem 'redis'
