@@ -172,4 +172,9 @@ class BusImporter
 
     all_routes
   end
+
+  def self.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
+    distance_array = $redis.get(pattern_id)
+    p distance_array #figuring out what to do with the giant numbers
+  end
 end

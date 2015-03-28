@@ -1,29 +1,32 @@
+require 'bus/bus_importer'
+
 class BusController < ApplicationController
-  include BusHelper
   def bus
     @distance = 0;
 
-    @start = "40th St. San Pablo Ave Emeryville, CA"
-    @end = "University Ave San Pablo Ave Berkeley, CA"
-    @route = "72"
-    @direction = "N"
+    @start = params["start"]
+    @ending = params["end"]
+    @route = params["route"]
+    @direction = params["direction"]
 
-    sch_routeid = get_sch_routeid(@route)
-    sch_patternid = get_sch_patternid(sch_routeid, @direction)
-    list_of_bus_stop_ids_on_route = get_cpt_stoppointid(sch_patternid)
+    sch_routeid = BusImporter.get_sch_routeid(@route)
+    sch_patternid = BusImporter.get_sch_patternid(sch_routeid, @direction)
+    cpt_stoppointid = BusImporter.get_cpt_stoppoingid(sch_patternid)
+    latlng_array = BusImporter.get_latlng_array(cpt_stoppointid)
 
-    latlngs_of_bus_stops_on_route = get_latlng_array(list_of_bus_stop_ids_on_route)
-    latlng_of_start = get_latlng(@start)
-    latlng_of_end = get_latlng(@end)
+    start_latlng = BusImporter.get_latlng(@start)
+    end_latlng = BusImporter.get_latlng(@ending)
 
-    stop_id_of_start = desired_cpt_stoppointid(latlng_of_start, latlngs_of_bus_stops_on_route)
-    stop_id_of_end = desired_cpt_stoppointid(latlng_of_end, latlngs_of_bus_stops_on_route)
+    start_cpt_stoppointid = BusImporter.desired_cpt_stoppointid(start_latlng, latlng_array)
+    end_cpt_stoppointid = BusImporter.desired_cpt_stoppointid(end_latlng, latlng_array)
 
-    array_of_my_trip = my_trip_latlng(stop_id_of_start, stop_id_of_end, sch_patternid)
+    start_seq_no = BusImporter.get_sequence_no(start_cpt_stoppointid, sch_patternid)
+    end_seq_no = BusImporter.get_sequence_no(end_cpt_stoppointid, sch_patternid)
 
-    array_of_my_trip.each_slice()
-    puts array_of_my_trip
+    #here is where I call the get_distance_of_leg method
 
-
+    result = Hash.new()
+    result["start"] = @start
+    result["end"] = @ending
   end
 end
