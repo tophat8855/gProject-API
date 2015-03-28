@@ -8,39 +8,41 @@ class BusImporter
 
   def self.import
     all_routes = self.get_sch_patternids_of_all
-    no_of_all_routes = all_routes.length
     all_stops = all_routes.map do |route|
       self.get_latlng_array(self.get_cpt_stoppointid(route))
     end
 
     all_stops.each do |route|
-      begin
-      distance_array = []
-      route.each_cons(2) do |stop|
-        start = stop[0]*","
-        ending = stop[1]*","
-
-        response = RestClient.get "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + start + "&destinations=" + ending +"&units=imperial&key=" + ENV['API_KEY']
-        json_result = JSON.parse(response.body)
-        results = json_result["rows"][0]["elements"][0]["distance"]["text"].gsub(/[^0-9.]/i, '').to_f
-
-        if results > 200
-          results = (results / 5280).round(2)
-        end
-
-        distance_array << results
-        sleep 0.1
-      end
       index = all_stops.index(route)
       cpt = all_routes[index]
       p cpt
-      p distance_array
-      p $redis.set(cpt, distance_array)
+      get_it = $redis.get(cpt)
+      if get_it.nil?
+        begin
+        distance_array = []
+        route.each_cons(2) do |stop|
+          start = stop[0]*","
+          ending = stop[1]*","
 
-      puts "*" * 80
-      rescue
-        puts "Failed to return"
-        next
+          response = RestClient.get "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + start + "&destinations=" + ending +"&units=imperial&key=" + ENV['API_KEY']
+          json_result = JSON.parse(response.body)
+          results = json_result["rows"][0]["elements"][0]["distance"]["text"].gsub(/[^0-9.]/i, '').to_f
+
+          if results > 200
+            results = (results / 5280).round(2)
+          end
+
+          distance_array << results
+          sleep 0.1
+        end
+        p distance_array
+        p $redis.set(cpt, distance_array)
+
+        puts "*" * 80
+        rescue
+          puts "Failed to return"
+          next
+        end
       end
     end
 
