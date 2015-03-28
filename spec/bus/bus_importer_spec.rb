@@ -123,7 +123,6 @@ RSpec.describe BusImporter do
     it 'takes 2 stop point ids and returns an ordered array of latlngs of bus stops in between them, inclusive' do
       starting_stoppointid = '12016978'
       ending_stoppointid = '12017087'
-
       patternid = '158608'
 
       array_of_latlng_of_trip = BusImporter.my_trip_latlng(starting_stoppointid, ending_stoppointid, patternid)

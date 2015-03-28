@@ -24,6 +24,10 @@ class BusImporter
         json_result = JSON.parse(response.body)
         results = json_result["rows"][0]["elements"][0]["distance"]["text"].gsub(/[^0-9.]/i, '').to_f
 
+        if results > 200
+          results = (results / 5280).round(2)
+        end
+
         distance_array << results
         sleep 0.1
       end
@@ -74,7 +78,7 @@ class BusImporter
 
   def self.get_latlng(address)
     address = address.gsub!(' ', "+")
-    response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=AIzaSyA6LTKJE21pYmBhAU0PiVndEyb7YZ9Cepo"
+    response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + ENV['API_KEY']
     results = JSON.parse(response.body)
     latlng = results["results"][0]["geometry"]["location"]
     lat = latlng["lat"]
