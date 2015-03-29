@@ -144,7 +144,17 @@ RSpec.describe BusImporter do
 
       distance = BusImporter.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
 
-      expect(distance).to eq(0)
+      expect(distance).to eq(1.29)
+    end
+
+    it 'returns a distance if you give a start and stop point right next to each other' do
+      start_seq_no = '12'
+      end_seq_no = '13'
+      pattern_id = '164752'
+
+      distance = BusImporter.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
+
+      expect(distance).to eq(5.5)
     end
   end
 end

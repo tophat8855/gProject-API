@@ -175,6 +175,16 @@ class BusImporter
 
   def self.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
     distance_array = $redis.get(pattern_id)
-    p distance_array #figuring out what to do with the giant numbers
+    array = distance_array.gsub!(/[^0-9.,]/i, '').split(",").map!(&:to_f)
+
+    start_index = start_seq_no.to_i - 1
+    end_index = end_seq_no.to_i - 2
+
+    distance = 0
+    for index in start_index..end_index do
+      distance += array[index]
+    end
+
+    distance
   end
 end
