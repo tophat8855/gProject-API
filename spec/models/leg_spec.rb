@@ -68,6 +68,24 @@ describe Leg do
       leg.delete
       expect(Leg.all.count).to eq(0)
     end
+
+    it 'creates and saves a bus leg' do
+      leg = Leg.new(
+        :mode => 'bus',
+        :start_location => '4000 San Pablo Ave, Emeryville, CA',
+        :end_location => 'Alcatraz and San Pablo, ',
+        :distance => 0.2,
+        :emissions => 0.6209,
+        :route => '72',
+        :direction => 'N',
+      )
+      leg.save
+      total = Leg.all.count
+
+      expect(total).to eq(1)
+      expect(leg.route).to eq('72')
+      expect(leg.direction).to eq('N')
+    end
   end
 
   describe 'validations are in place for leg' do
