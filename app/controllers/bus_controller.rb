@@ -23,10 +23,22 @@ class BusController < ApplicationController
     start_seq_no = BusImporter.get_sequence_no(start_cpt_stoppointid, sch_patternid)
     end_seq_no = BusImporter.get_sequence_no(end_cpt_stoppointid, sch_patternid)
 
-    #here is where I call the get_distance_of_leg method
+    @distance = BusImporter.get_distance_of_leg(start_seq_no, end_seq_no, sch_patternid)
+    @emissions = 0.15873264 * @distance   #emissions data from http://www.buses.org/files/ComparativeEnergy.pdf
+
+    nested_array = []
 
     result = Hash.new()
     result["start"] = @start
     result["end"] = @ending
+    result["route"] = @route
+    result["direction"] = @direction
+    result["emissions"] = @emissions
+
+    nested_array.push(result)
+
+    @results["bus"] = nested_array
+
+    render json: @results
   end
 end
