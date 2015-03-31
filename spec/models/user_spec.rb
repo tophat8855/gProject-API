@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe User do
+  after(:each) do
+    User.delete_all
+  end
   describe 'users are CRUDded in database' do
     it 'creates and saves a leg' do
       user = User.new(
@@ -23,6 +26,7 @@ describe User do
       user.save
       user.delete
       total = User.all.count
+      puts User.all
 
       expect(total).to eq(0)
     end
@@ -47,6 +51,7 @@ describe User do
   describe 'validations are in place for user' do
     it 'does not save a blank user' do
       user = User.create
+      puts User.all
       expect(User.all.count).to eq(0)
     end
 

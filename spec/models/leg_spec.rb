@@ -9,6 +9,7 @@ describe Leg do
         :end_location => '543 Howard, San Francisco, CA',
         :distance => 0.2,
         :emissions => 0.6209,
+        :user_id => 1
       )
       leg.save
       total = Leg.all.count
