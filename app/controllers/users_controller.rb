@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   def index
     @users = User.all
-    #render a json. this should be private somehow.
+
+    render json: @users  # this should be private somehow.
   end
 
   private
