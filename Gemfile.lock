@@ -40,6 +40,13 @@ GEM
     builder (3.2.2)
     coderay (1.1.0)
     debug_inspector (0.0.2)
+    devise (3.4.1)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      responders
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     dotenv (1.0.2)
     dotenv-rails (1.0.2)
@@ -58,6 +65,7 @@ GEM
     minitest (5.5.1)
     multi_json (1.10.1)
     netrc (0.10.2)
+    orm_adapter (0.5.0)
     pg (0.18.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -86,6 +94,8 @@ GEM
     rdoc (4.2.0)
       json (~> 1.4)
     redis (3.2.1)
+    responders (1.1.2)
+      railties (>= 3.2, < 4.2)
     rest-client (1.7.2)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
@@ -123,6 +133,8 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    warden (1.2.3)
+      rack (>= 1.0)
 
 PLATFORMS
   ruby
@@ -132,6 +144,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   better_errors
   binding_of_caller
+  devise
   dotenv-rails
   jbuilder (~> 2.0)
   pg

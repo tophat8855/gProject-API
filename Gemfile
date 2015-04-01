@@ -20,3 +20,4 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'pry'
 end
+gem 'devise'
