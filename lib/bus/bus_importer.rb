@@ -1,10 +1,10 @@
 require 'csv'
 
 class BusImporter
-  @@route_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/ROUTE.CSV')
-  @@pattern_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERN.CSV')
-  @@patternstop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/PATTERNSTOP.CSV')
-  @@stop_csv = CSV.read('app/assets/RTDTransitData_AC_2015.03.15/STOP.CSV')
+  @@route_csv = CSV.read('data/ROUTE.CSV')
+  @@pattern_csv = CSV.read('data/PATTERN.CSV')
+  @@patternstop_csv = CSV.read('data/PATTERNSTOP.CSV')
+  @@stop_csv = CSV.read('data/STOP.CSV')
 
   def self.import
     all_routes = self.get_sch_patternids_of_all
