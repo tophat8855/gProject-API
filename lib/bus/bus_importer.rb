@@ -1,10 +1,13 @@
 require 'csv'
 
 class BusImporter
-  @@route_csv = CSV.read('data/ROUTE.CSV')
-  @@pattern_csv = CSV.read('data/PATTERN.CSV')
-  @@patternstop_csv = CSV.read('data/PATTERNSTOP.CSV')
-  @@stop_csv = CSV.read('data/STOP.CSV')
+
+  def initialize(route_path, pattern_path, pattern_stop_path, stop_path)
+    @route_csv = CSV.read(route_path)
+    @pattern_csv = CSV.read(pattern_path)
+    @patternstop_csv = CSV.read(pattern_stop_path)
+    @stop_csv = CSV.read(stop_path)
+  end
 
   def self.import
     all_routes = self.get_sch_patternids_of_all
@@ -50,7 +53,7 @@ class BusImporter
 
   def self.get_sch_routeid(route)
     sch_routeid = 0
-    @@route_csv.each do |row|
+    @route_csv.each do |row|
       if row[10] == route
         sch_routeid = row[0]
       end
@@ -60,7 +63,7 @@ class BusImporter
 
   def self.get_sch_patternid(sch_routeid, direction)
     sch_patternid = 0
-    @@pattern_csv.each do |row|
+    @pattern_csv.each do |row|
       if (row[6] == sch_routeid) && (row[9].strip == direction)
         sch_patternid = row[0]
       end
@@ -70,7 +73,7 @@ class BusImporter
 
   def self.get_cpt_stoppointid(sch_patternid)
     cpt_stoppointid = []
-    @@patternstop_csv.each do |row|
+    @patternstop_csv.each do |row|
       if row[5] == sch_patternid
         cpt_stoppointid << row[7]
       end
@@ -101,7 +104,7 @@ class BusImporter
   def self.get_latlng_array(cpt_stoppointid)
     latlng_array = []
 
-    @@stop_csv.each do |row|
+    @stop_csv.each do |row|
       if cpt_stoppointid.include? row[0]
         latlng_array << [row[8].to_f, row[6].to_f]
       end
@@ -120,7 +123,7 @@ class BusImporter
     closest_index = dist_array.index(closest)
     desired_latlng = latlng_array[closest_index]
 
-    @@stop_csv.each do |row|
+    @stop_csv.each do |row|
       float_lat = row[8].to_f
       float_lng = row[6].to_f
 
@@ -137,7 +140,7 @@ class BusImporter
     start_sequence_no = get_sequence_no(start_stopid, patternid).to_i
     end_sequence_no = get_sequence_no(end_stopid, patternid).to_i
 
-    @@patternstop_csv.each do |row|
+    @patternstop_csv.each do |row|
       if (row[5] == patternid) && (start_sequence_no..end_sequence_no).include?(row[1].to_i)
         trip_array << [row[1].to_i, row[7]]
       end
@@ -152,7 +155,7 @@ class BusImporter
   def self.get_sequence_no(stopid, patternid)
     sequence_no = 0
 
-    @@patternstop_csv.each do |row|
+    @patternstop_csv.each do |row|
       if row[5] == patternid && row[7] == stopid
         sequence_no = row[1]
       end
@@ -164,7 +167,7 @@ class BusImporter
   def self.get_sch_patternids_of_all
     all_routes = []
 
-    @@patternstop_csv.each do |row|
+    @patternstop_csv.each do |row|
       if !all_routes.include? row[5]
         all_routes << row[5]
       end

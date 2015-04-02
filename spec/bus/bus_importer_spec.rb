@@ -3,16 +3,19 @@ require 'bus/bus_importer'
 
 RSpec.describe BusImporter do
   describe 'can get desired values from csvs' do
+    subject { BusImporter.new('data/PATTERN.csv', 'data/PATTERNSTOP.csv',
+      'data/ROUTE.csv', 'data/STOP.csv') }
+
     it 'gets a SCH_ROUTEID from the ROUTE.CSV when the route is a string' do
       route = "72R"
-      sch_routeid = BusImporter.get_sch_routeid(route)
+      sch_routeid = subject.get_sch_routeid(route)
 
       expect(sch_routeid).to eq('43770')
     end
 
     it 'gets a SCH_ROUTEID from the ROUTE.CSV when the route is a number' do
       route = "72"
-      sch_routeid = BusImporter.get_sch_routeid(route)
+      sch_routeid = subject.get_sch_routeid(route)
 
       expect(sch_routeid).to eq('43768')
     end
@@ -20,14 +23,14 @@ RSpec.describe BusImporter do
     it 'gets a SCH_PATTERNID from the PATTERN.CSV file' do
       sch_routeid = '43770'
       direction = 'N'
-      sch_patternid = BusImporter.get_sch_patternid(sch_routeid, direction)
+      sch_patternid = subject.get_sch_patternid(sch_routeid, direction)
 
       expect(sch_patternid).to eq('158608')
     end
 
     it 'gets a list of CPT_STOPPOINTID from the PATTERN_STOP.CSV' do
       sch_patternid = '158608'
-      cpt_stoppointid = BusImporter.get_cpt_stoppointid(sch_patternid)
+      cpt_stoppointid = subject.get_cpt_stoppointid(sch_patternid)
 
       expect(cpt_stoppointid.length).to eq(27)
       expect(cpt_stoppointid).to eq(['12016322','12013481', '12013490', '12013457', '1553117',
@@ -39,7 +42,7 @@ RSpec.describe BusImporter do
 
     it 'gives the lat/lng for an address' do
       start_address = "40th St. San Pablo Ave Emeryville, CA"
-      latlng = BusImporter.get_latlng(start_address)
+      latlng = subject.get_latlng(start_address)
 
       expect(latlng).to eq([37.831195, -122.279198])
     end
@@ -48,7 +51,7 @@ RSpec.describe BusImporter do
       first_point = [0, 0]
       second_point = [3, 4]
 
-      distance = BusImporter.distance(first_point, second_point)
+      distance = subject.distance(first_point, second_point)
 
       expect(distance).to eq(5)
     end
@@ -57,7 +60,7 @@ RSpec.describe BusImporter do
       first_latlng = [37.831195, -122.279198]
       second_latlng = [37.8130485, -122.2739678]
 
-      distance = BusImporter.distance(first_latlng, second_latlng)
+      distance = subject.distance(first_latlng, second_latlng)
 
       expect(distance).to eq(0.01888519140199558)
     end
@@ -69,7 +72,7 @@ RSpec.describe BusImporter do
         '12017059', '12017071', '1533533', '12017049', '12017031', '12017078',
         '12017090', '12017092', '12017027', '1534322']
 
-      latlng_array = BusImporter.get_latlng_array(cpt_stoppointid)
+      latlng_array = subject.get_latlng_array(cpt_stoppointid)
 
       expect(latlng_array.length).to eq(27)
       expect(latlng_array).to eq([[37.92488940, -122.31683060],
@@ -106,7 +109,7 @@ RSpec.describe BusImporter do
         [37.869467, -122.29211810], [37.955914, -122.33606190],
         [37.96079340, -122.34286730], [37.81304850, -122.27396780]]
 
-      cpt_stoppointid = BusImporter.desired_cpt_stoppointid(latlng_to_compare, latlng_array)
+      cpt_stoppointid = subject.desired_cpt_stoppointid(latlng_to_compare, latlng_array)
 
       expect(cpt_stoppointid).to eq('12016978')
     end
@@ -115,7 +118,7 @@ RSpec.describe BusImporter do
       stopid = '12016978'
       patternid = '158608'
 
-      sequence_no = BusImporter.get_sequence_no(stopid, patternid)
+      sequence_no = subject.get_sequence_no(stopid, patternid)
 
       expect(sequence_no).to eq('9')
     end
@@ -125,14 +128,14 @@ RSpec.describe BusImporter do
       ending_stoppointid = '12017087'
       patternid = '158608'
 
-      array_of_latlng_of_trip = BusImporter.my_trip_latlng(starting_stoppointid, ending_stoppointid, patternid)
+      array_of_latlng_of_trip = subject.my_trip_latlng(starting_stoppointid, ending_stoppointid, patternid)
 
       expect(array_of_latlng_of_trip.length).to eq(6)
       expect(array_of_latlng_of_trip).to eq([[37.8314868, -122.2798835], [37.8472126, -122.2849571], [37.8525141, -122.2866745], [37.8614662, -122.2895464], [37.8414257, -122.2830821], [37.869467, -122.2921181]])
     end
 
     it 'gets a list of all the SCH_PATTERNIDs' do
-      all_routes = BusImporter.get_sch_patternids_of_all
+      all_routes = subject.get_sch_patternids_of_all
 
       expect(all_routes.length).to eq(442)
     end
@@ -142,7 +145,7 @@ RSpec.describe BusImporter do
       end_seq_no = '5'
       pattern_id = '164752'
 
-      distance = BusImporter.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
+      distance = subject.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
 
       expect(distance).to eq(1.29)
     end
@@ -152,7 +155,7 @@ RSpec.describe BusImporter do
       end_seq_no = '13'
       pattern_id = '164752'
 
-      distance = BusImporter.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
+      distance = subject.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
 
       expect(distance).to eq(5.5)
     end

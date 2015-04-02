@@ -11,10 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150401000241) do
+ActiveRecord::Schema.define(version: 20150402211328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bus_routes", force: true do |t|
+    t.string "sch_routeid"
+    t.string "rtd_agencyrouteid"
+  end
 
   create_table "legs", force: true do |t|
     t.string   "mode"
@@ -28,6 +33,23 @@ ActiveRecord::Schema.define(version: 20150401000241) do
     t.string   "direction"
     t.string   "route"
     t.integer  "user_id"
+  end
+
+  create_table "pattern_stops", force: true do |t|
+    t.string "sch_stoppointseqno"
+    t.string "sch_patternid"
+    t.string "cpt_stoppointid"
+  end
+
+  create_table "patterns", force: true do |t|
+    t.string "sch_patternid"
+    t.string "sch_routeid"
+  end
+
+  create_table "stops", force: true do |t|
+    t.string "cpt_stoppointid"
+    t.string "sp_longitude"
+    t.string "sp_latitude"
   end
 
   create_table "trips", force: true do |t|
