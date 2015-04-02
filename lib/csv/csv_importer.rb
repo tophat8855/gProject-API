@@ -24,7 +24,7 @@ class CsvImporter
     @pattern_csv.each do |line|
       Pattern.create(
         :sch_patternid => line[0],
-        :sch_routeid => line[6]
+        :sch_routeid => line[6],
       )
     end
 
@@ -32,7 +32,7 @@ class CsvImporter
       PatternStop.create(
         :sch_stoppointseqno => line[1],
         :sch_patternid => line[5],
-        :cpt_stoppointid => line[7]
+        :cpt_stoppointid => line[7],
       )
     end
 
@@ -40,7 +40,7 @@ class CsvImporter
       Stop.create(
         :cpt_stoppointid => line[0],
         :sp_longitude => line[6],
-        :sp_latitude => line[8]
+        :sp_latitude => line[8],
       )
     end
   end
