@@ -5,13 +5,10 @@ class BusController < ApplicationController
     @distance = 0;
 
     @start = params["start"]
-    puts @start
     @ending = params["end"]
-    puts @ending
     @route = params["route"]
-    puts @route
     @direction = params["direction"]
-    puts @direction
+
 
     sch_routeid = BusImporter.get_sch_routeid(@route)
     puts "Sch Route id = "

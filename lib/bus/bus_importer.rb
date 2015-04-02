@@ -1,7 +1,6 @@
 require 'csv'
 
 class BusImporter
-
   def initialize(route_path, pattern_path, pattern_stop_path, stop_path)
     @route_csv = CSV.read(route_path)
     @pattern_csv = CSV.read(pattern_path)
@@ -9,10 +8,10 @@ class BusImporter
     @stop_csv = CSV.read(stop_path)
   end
 
-  def self.import
-    all_routes = self.get_sch_patternids_of_all
+  def import
+    all_routes = get_sch_patternids_of_all
     all_stops = all_routes.map do |route|
-      self.get_latlng_array(self.get_cpt_stoppointid(route))
+      get_latlng_array(get_cpt_stoppointid(route))
     end
 
     all_stops.each do |route|
@@ -48,10 +47,9 @@ class BusImporter
         end
       end
     end
-
   end
 
-  def self.get_sch_routeid(route)
+  def get_sch_routeid(route)
     sch_routeid = 0
     @route_csv.each do |row|
       if row[10] == route
@@ -61,7 +59,7 @@ class BusImporter
     sch_routeid
   end
 
-  def self.get_sch_patternid(sch_routeid, direction)
+  def get_sch_patternid(sch_routeid, direction)
     sch_patternid = 0
     @pattern_csv.each do |row|
       if (row[6] == sch_routeid) && (row[9].strip == direction)
@@ -71,7 +69,7 @@ class BusImporter
     sch_patternid
   end
 
-  def self.get_cpt_stoppointid(sch_patternid)
+  def get_cpt_stoppointid(sch_patternid)
     cpt_stoppointid = []
     @patternstop_csv.each do |row|
       if row[5] == sch_patternid
@@ -81,7 +79,7 @@ class BusImporter
     cpt_stoppointid
   end
 
-  def self.get_latlng(address)
+  def get_latlng(address)
     address = address.gsub!(' ', "+")
     response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + ENV['API_KEY']
     results = JSON.parse(response.body)
@@ -92,7 +90,7 @@ class BusImporter
     address_latlng = [lat, lng]
   end
 
-  def self.distance(point1, point2)
+  def distance(point1, point2)
     x2 = point2[0]
     x1 = point1[0]
     y2 = point2[1]
@@ -101,7 +99,7 @@ class BusImporter
     distance = Math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
   end
 
-  def self.get_latlng_array(cpt_stoppointid)
+  def get_latlng_array(cpt_stoppointid)
     latlng_array = []
 
     @stop_csv.each do |row|
@@ -112,7 +110,7 @@ class BusImporter
     latlng_array
   end
 
-  def self.desired_cpt_stoppointid(latlng_comp, latlng_array)
+  def desired_cpt_stoppointid(latlng_comp, latlng_array)
     desired_cpt_stoppointid = ''
 
     dist_array = latlng_array.map do |point|
@@ -134,7 +132,7 @@ class BusImporter
     desired_cpt_stoppointid
   end
 
-  def self.my_trip_latlng(start_stopid, end_stopid, patternid)
+  def my_trip_latlng(start_stopid, end_stopid, patternid)
     trip_array = []
 
     start_sequence_no = get_sequence_no(start_stopid, patternid).to_i
@@ -152,7 +150,7 @@ class BusImporter
     get_latlng_array(cpt_list)
   end
 
-  def self.get_sequence_no(stopid, patternid)
+  def get_sequence_no(stopid, patternid)
     sequence_no = 0
 
     @patternstop_csv.each do |row|
@@ -164,7 +162,7 @@ class BusImporter
     sequence_no
   end
 
-  def self.get_sch_patternids_of_all
+  def get_sch_patternids_of_all
     all_routes = []
 
     @patternstop_csv.each do |row|
@@ -176,7 +174,7 @@ class BusImporter
     all_routes
   end
 
-  def self.get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
+  def get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
     distance_array = $redis.get(pattern_id)
     array = distance_array.gsub!(/[^0-9.,]/i, '').split(",").map!(&:to_f)
 
