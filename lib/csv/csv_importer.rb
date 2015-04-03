@@ -21,16 +21,21 @@ class CsvImporter
         route.name = line[10]
       end
       bus_route.save
+      p bus_route
     end
+    p "routes finished"
 
     @pattern_csv.each do |line|
       pattern = Pattern.new do |pat|
         pat.id = line[0]
         pat.bus_route_id = line[6]
         pat.direction = line[9].strip
+        p
       end
       pattern.save
+      p pattern
     end
+    p "patterns finished"
 
     @patternstop_csv.each do |line|
       pstop = PatternStop.new do |ps|
@@ -40,7 +45,9 @@ class CsvImporter
         ps.stop_id = line[7]
       end
       pstop.save
+      p pstop
     end
+    p "pattern stops finished"
 
     @stop_csv.each do |line|
       stop = Stop.new do |s|
@@ -49,6 +56,8 @@ class CsvImporter
         s.latitude = line[8]
       end
       stop.save
+      p stop
     end
+    p "stops finished"
   end
 end
