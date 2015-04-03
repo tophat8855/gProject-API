@@ -49,88 +49,88 @@ class BusImporter
     end
   end
 
-  def get_sch_routeid(route)
-    sch_routeid = 0
-    @route_csv.each do |row|
-      if row[10] == route
-        sch_routeid = row[0]
-      end
-    end
-    sch_routeid
-  end
+  # def get_sch_routeid(route)
+  #   sch_routeid = 0
+  #   @route_csv.each do |row|
+  #     if row[10] == route
+  #       sch_routeid = row[0]
+  #     end
+  #   end
+  #   sch_routeid
+  # end
 
-  def get_sch_patternid(sch_routeid, direction)
-    sch_patternid = 0
-    @pattern_csv.each do |row|
-      if (row[6] == sch_routeid) && (row[9].strip == direction)
-        sch_patternid = row[0]
-      end
-    end
-    sch_patternid
-  end
+  # def get_sch_patternid(sch_routeid, direction)
+  #   sch_patternid = 0
+  #   @pattern_csv.each do |row|
+  #     if (row[6] == sch_routeid) && (row[9].strip == direction)
+  #       sch_patternid = row[0]
+  #     end
+  #   end
+  #   sch_patternid
+  # end
 
-  def get_cpt_stoppointid(sch_patternid)
-    cpt_stoppointid = []
-    @patternstop_csv.each do |row|
-      if row[5] == sch_patternid
-        cpt_stoppointid << row[7]
-      end
-    end
-    cpt_stoppointid
-  end
+  # def get_cpt_stoppointid(sch_patternid)
+  #   cpt_stoppointid = []
+  #   @patternstop_csv.each do |row|
+  #     if row[5] == sch_patternid
+  #       cpt_stoppointid << row[7]
+  #     end
+  #   end
+  #   cpt_stoppointid
+  # end
 
-  def get_latlng(address)
-    address = address.gsub!(' ', "+")
-    response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + ENV['API_KEY']
-    results = JSON.parse(response.body)
-    latlng = results["results"][0]["geometry"]["location"]
-    lat = latlng["lat"]
-    lng = latlng["lng"]
+  # def get_latlng(address)
+  #   address = address.gsub!(' ', "+")
+  #   response = RestClient.get "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + ENV['API_KEY']
+  #   results = JSON.parse(response.body)
+  #   latlng = results["results"][0]["geometry"]["location"]
+  #   lat = latlng["lat"]
+  #   lng = latlng["lng"]
+  #
+  #   address_latlng = [lat, lng]
+  # end
 
-    address_latlng = [lat, lng]
-  end
+  # def distance(point1, point2)
+  #   x2 = point2[0]
+  #   x1 = point1[0]
+  #   y2 = point2[1]
+  #   y1 = point1[1]
+  #
+  #   distance = Math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
+  # end
 
-  def distance(point1, point2)
-    x2 = point2[0]
-    x1 = point1[0]
-    y2 = point2[1]
-    y1 = point1[1]
+  # def get_latlng_array(cpt_stoppointid)
+  #   latlng_array = []
+  #
+  #   @stop_csv.each do |row|
+  #     if cpt_stoppointid.include? row[0]
+  #       latlng_array << [row[8].to_f, row[6].to_f]
+  #     end
+  #   end
+  #   latlng_array
+  # end
 
-    distance = Math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
-  end
-
-  def get_latlng_array(cpt_stoppointid)
-    latlng_array = []
-
-    @stop_csv.each do |row|
-      if cpt_stoppointid.include? row[0]
-        latlng_array << [row[8].to_f, row[6].to_f]
-      end
-    end
-    latlng_array
-  end
-
-  def desired_cpt_stoppointid(latlng_comp, latlng_array)
-    desired_cpt_stoppointid = ''
-
-    dist_array = latlng_array.map do |point|
-      distance(latlng_comp, point)
-    end
-
-    closest = dist_array.min
-    closest_index = dist_array.index(closest)
-    desired_latlng = latlng_array[closest_index]
-
-    @stop_csv.each do |row|
-      float_lat = row[8].to_f
-      float_lng = row[6].to_f
-
-      if desired_latlng[0] == float_lat && desired_latlng[1] == float_lng
-        desired_cpt_stoppointid = row[0]
-      end
-    end
-    desired_cpt_stoppointid
-  end
+  # def desired_cpt_stoppointid(latlng_comp, latlng_array)
+  #   desired_cpt_stoppointid = ''
+  #
+  #   dist_array = latlng_array.map do |point|
+  #     distance(latlng_comp, point)
+  #   end
+  #
+  #   closest = dist_array.min
+  #   closest_index = dist_array.index(closest)
+  #   desired_latlng = latlng_array[closest_index]
+  #
+  #   @stop_csv.each do |row|
+  #     float_lat = row[8].to_f
+  #     float_lng = row[6].to_f
+  #
+  #     if desired_latlng[0] == float_lat && desired_latlng[1] == float_lng
+  #       desired_cpt_stoppointid = row[0]
+  #     end
+  #   end
+  #   desired_cpt_stoppointid
+  # end
 
   def my_trip_latlng(start_stopid, end_stopid, patternid)
     trip_array = []
@@ -150,17 +150,17 @@ class BusImporter
     get_latlng_array(cpt_list)
   end
 
-  def get_sequence_no(stopid, patternid)
-    sequence_no = 0
-
-    @patternstop_csv.each do |row|
-      if row[5] == patternid && row[7] == stopid
-        sequence_no = row[1]
-      end
-    end
-
-    sequence_no
-  end
+  # def get_sequence_no(stopid, patternid)
+  #   sequence_no = 0
+  #
+  #   @patternstop_csv.each do |row|
+  #     if row[5] == patternid && row[7] == stopid
+  #       sequence_no = row[1]
+  #     end
+  #   end
+  #
+  #   sequence_no
+  # end
 
   def get_sch_patternids_of_all
     all_routes = []
@@ -174,18 +174,18 @@ class BusImporter
     all_routes
   end
 
-  def get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
-    distance_array = $redis.get(pattern_id)
-    array = distance_array.gsub!(/[^0-9.,]/i, '').split(",").map!(&:to_f)
-
-    start_index = start_seq_no.to_i - 1
-    end_index = end_seq_no.to_i - 2
-
-    distance = 0
-    for index in start_index..end_index do
-      distance += array[index]
-    end
-
-    distance
-  end
+  # def get_distance_of_leg(start_seq_no, end_seq_no, pattern_id)
+  #   distance_array = $redis.get(pattern_id)
+  #   array = distance_array.gsub!(/[^0-9.,]/i, '').split(",").map!(&:to_f)
+  #
+  #   start_index = start_seq_no.to_i - 1
+  #   end_index = end_seq_no.to_i - 2
+  #
+  #   distance = 0
+  #   for index in start_index..end_index do
+  #     distance += array[index]
+  #   end
+  #
+  #   distance
+  # end
 end

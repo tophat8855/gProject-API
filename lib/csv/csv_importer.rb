@@ -14,34 +14,41 @@ class CsvImporter
   end
 
   def import
+
     @route_csv.each do |line|
-      BusRoute.create(
-        :sch_routeid => line[0],
-        :rtd_agencyrouteid => line[10]
-      )
+      bus_route = BusRoute.new do |route|
+        route.id = line[0]
+        route.name = line[10]
+      end
+      bus_route.save
     end
 
     @pattern_csv.each do |line|
-      Pattern.create(
-        :sch_patternid => line[0],
-        :sch_routeid => line[6],
-      )
+      pattern = Pattern.new do |pat|
+        pat.id = line[0]
+        pat.bus_route_id = line[6]
+        pat.direction = line[9].strip
+      end
+      pattern.save
     end
 
     @patternstop_csv.each do |line|
-      PatternStop.create(
-        :sch_stoppointseqno => line[1],
-        :sch_patternid => line[5],
-        :cpt_stoppointid => line[7],
-      )
+      pstop = PatternStop.new do |ps|
+        ps.id = line[0]
+        ps.seq_no = line[1]
+        ps.pattern_id = line[5]
+        ps.stop_id = line[7]
+      end
+      pstop.save
     end
 
     @stop_csv.each do |line|
-      Stop.create(
-        :cpt_stoppointid => line[0],
-        :sp_longitude => line[6],
-        :sp_latitude => line[8],
-      )
+      stop = Stop.new do |s|
+        s.id = line[0]
+        s.longitude = line[6]
+        s.latitude = line[8]
+      end
+      stop.save
     end
   end
 end
