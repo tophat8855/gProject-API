@@ -1,18 +1,20 @@
 class ApplicationController < ActionController::Base
   require 'csv'
   before_filter :authenticate_user_from_token!
+  #before_filter :authenticate_user!
+
   before_filter :configure_permitted_parameters!, if: :devise_controller?
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
   def current_user
-    User.find_by(id: session[:user_id])
+    @current_user
+    #User.find_by(id: session[:user_id])
   end
 
   helper_method :current_user
 
-  before_filter :authenticate_user!
 
   private
     def authenticate_user_from_token!
@@ -21,7 +23,18 @@ class ApplicationController < ActionController::Base
       user = user_email && User.find_by_email(user_email)
 
       if user && Devise.secure_compare(user.authentication_token, token)
-        sign_in user, store: false
+        sign_in user#, store: false
+        p "user signed in"
+        @current_user = user
+      else
+        @current_user = nil
+        p "*" * 80
+        p user
+        p token
+        p "*" * 80
+
+        p user.authentication_token
+        p 'Nothing happened'
       end
     end
   end

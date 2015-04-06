@@ -1,12 +1,18 @@
 class LegsController < ApplicationController
   def index
-    @legs = Leg.all
+    @legs = current_user.legs
     render json: @legs
   end
 
   def create
+    p "*" * 80
+
+    p current_user
     @leg = Leg.new(leg_params)
-    if @leg.save
+    @leg.user = current_user
+    p "*" * 80
+    p @leg
+    if @leg.save!
       render json: @leg
     end
   end
@@ -25,6 +31,6 @@ class LegsController < ApplicationController
 
   private
   def leg_params
-    params.require(:leg).permit(:mode, :start_location, :end_location, :distance, :emissions, :direction, :route, :created_at, :updated_at, :trip_id)
+    params.require(:leg).permit(:mode, :start_location, :end_location, :distance, :emissions, :direction, :route, :date, :created_at, :updated_at, :user_id, :trip_id)
   end
 end
