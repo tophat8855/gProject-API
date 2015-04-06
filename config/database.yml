@@ -80,13 +80,4 @@ test:
 #
 production:
   <<: *default
-  database: gProject_api_production
-  username: gProject_api
-  password: <%= ENV['GPROJECT_API_DATABASE_PASSWORD'] %>
-
-  <% if ENV['VCAP_SERVICES'] %>
-  <% services = JSON.parse(ENV['VCAP_SERVICES'])
-    postgres = services["elephantsql"]
-    credentials = postgres.first["credentials"] %>
-  url: <%= credentials["uri"] %>
-  <% end %>
+  url: <%= ENV['DATABASE_URL'] %>
