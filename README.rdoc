@@ -1,28 +1,19 @@
-== README
+= Carfree Commute API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the API code for the Carfree Commute app, code [here](https://github.com/tophat8855/gProject-frontend).
 
-Things you may want to cover:
+= Features
 
-* Ruby version
+This API uses Google Map requests to return the distance walked and biked. 
 
-* System dependencies
+BART mileage and emissions came from BART.gov.
 
-* Configuration
+AC Transit data obtained through the 511.org Static Data Feed. I took the data I needed and turned them into Active Record objects
+in the Postgres database.
 
-* Database creation
+Distance between bus stops is calculated by summing the distance between each stop (latitude and longitude from Static Data Feed)
+on a route. Those individual distances were calculated by making Google Map API requests and saving the returned distance to 
+a Redis Database. 
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Additionally, each request to this API for bus routes also makes a Google Map API request to determine which bus stop is closest to the
+user's starting and ending addresses.
