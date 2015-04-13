@@ -24,17 +24,9 @@ class ApplicationController < ActionController::Base
 
       if user && Devise.secure_compare(user.authentication_token, token)
         sign_in user#, store: false
-        p "user signed in"
         @current_user = user
       else
         @current_user = nil
-        p "*" * 80
-        p user
-        p token
-        p "*" * 80
-
-        p user.authentication_token
-        p 'Nothing happened'
       end
     end
   end
